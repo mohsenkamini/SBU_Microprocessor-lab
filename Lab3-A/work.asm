@@ -14,10 +14,7 @@
 .DATA
  CTRL_REG EQU 93H	; WORKING MODE: A,B,LOWER_C IN | UPPER_C OUT
  B8255 EQU 80H
- 
- PCNF_PER EQU 86H
- PCTR EQU 0H
- PCNF_TMR EQU 6H
+ B8253 EQU 0E0H
 .CODE
 
 MAIN	PROC FAR
@@ -25,7 +22,7 @@ MAIN	PROC FAR
 	MOV DS, AX 
 	
 	MOV DX,B8255+3	; LOAD CONTROL REG
-	MOV AL,CTR_REG	; LOAD CONTROL BYTE
+	MOV AL,CTRL_REG	; LOAD CONTROL BYTE
 	OUT DX,AL
 	
 A_IN_CHECK:
@@ -49,38 +46,46 @@ B_IN_CHECK:
 HANDLE_DS_IN:
 LOG_BX:
    MOV SI,0
-   FOR:
+FOR_LOOP:
       CMP BX,0
-      JE END
+      JE ROF_LOOP
       SHR BX,1
-      JMP FOR
-   END:
+      JMP FOR_LOOP
+ROF_LOOP:
    MOV BX,SI		; SAVE LOG_2_BX IN BX
    
+;   BLINK_CHECK:
+;   MOV DX,B8255+2	; LOAD PC
+;   IN AL,DX
+;   CMP AL,0
+;   JE ONESHOT_CHECK
+;   CALL HANDLE_BLINK
+;   
+;   ONESHOT_CHECK:
+;   MOV DX,B8255+2	; LOAD PC
+;   IN AL,DX
+;   CMP AL,0
+;   JE BLINK_CHECK
+;   CALL HANDLE_BLINK
+
+   MOV DX,B8253+3	; LOAD control reg of 8253
+   MOV AL, 12H; counter 0, mode 1, only lsb
+   OUT DX, AL; send it to control register
    
-   BLINK_CHECK:
-   MOV DX,B8255+2	; LOAD PC
-   IN AL,DX
-   CMP AL,0
-   JE ONESHOT_CHECK
-   CALL HANDLE_BLINK
-   
-   ONESHOT_CHECK:
-   MOV DX,B8255+2	; LOAD PC
-   IN AL,DX
-   CMP AL,0
-   JE BLINK_CHECK
-   CALL HANDLE_BLINK
+   MOV AL, 64; load the divisor
+   MUL BL	; AX=64*BL 
+   ;MOV AX,BX; load the divisor
+   MOV DX,B8253	; LOAD COUNTER 0 of 8253
+   OUT DX, AL; send the low byte
+   MOV AL,AH
+   OUT DX, AL; send the HIGH byte
    
    
-MOV AL, B2H; counter 2, mode 1, binary
-OUT E3H, AL; send it to control register
-MOV AX, 0C26AH; load the divisor
-OUT 96H, AL; send the low byte
-MOV AL, AH; to counter 2
-OUT 96H, AL; send the high byte
+   
+   
+   
    
 	
 
 MAIN	ENDP
-	END	MAIN
+	END MAIN
