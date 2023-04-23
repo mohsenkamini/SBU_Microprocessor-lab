@@ -63,7 +63,7 @@ FOR_LOOP:
 ROF_LOOP:
    MOV BX,SI		; SAVE LOG_2_BX IN BX
 
-
+; COUNTER 0
    MOV DX,B8253+6	; LOAD control reg of 8253
    MOV AL, 32H; counter 0, mode 1, lsb FIRST AND THEN MSB
    OUT DX, AL; send it to control register
@@ -78,15 +78,33 @@ ROF_LOOP:
    OUT DX, AL; send the HIGH byte
    
    
+   
+; COUNTER 1
    MOV DX,B8253+6	; LOAD control reg of 8253
-   MOV AL, 76H; counter 1, mode 3, lsb FIRST AND THEN MSB
+   MOV AL, 54H; counter 1, mode 2, lsb only
    OUT DX, AL; send it to control register
 	
 	
+   MOV AL, 63; load the divisor
+   ;MUL BL	; AX=64*BL 
+   ;MOV AX,BX; load the divisor
+   MOV DX,B8253+2	; LOAD COUNTER 1 of 8253
+   OUT DX, AL; send the low byte
+   ;MOV AL,BL
+   ;OUT DX, AL; send the HIGH byte
+   
+	
+	
+; COUNTER 2
+   MOV DX,B8253+6	; LOAD control reg of 8253
+   MOV AL, 0B2H; counter 2, mode 1, lsb FIRST AND THEN MSB
+   OUT DX, AL; send it to control register
+   
+   
    MOV AL, 64; load the divisor
    MUL BL	; AX=64*BL 
    ;MOV AX,BX; load the divisor
-   MOV DX,B8253+2	; LOAD COUNTER 1 of 8253
+   MOV DX,B8253+4	; LOAD COUNTER 2 of 8253
    OUT DX, AL; send the low byte
    MOV AL,AH
    OUT DX, AL; send the HIGH byte
