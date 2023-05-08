@@ -1,0 +1,15 @@
+--cpu=Cortex-M4.fp.sp
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\main_1.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\startup_stm32f401xe.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\system_stm32f4xx.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\stm32f4xx_hal.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\stm32f4xx_hal_cortex.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\stm32f4xx_hal_gpio.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\stm32f4xx_hal_pwr.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\stm32f4xx_hal_pwr_ex.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\stm32f4xx_hal_rcc.o"
+"\\vboxsvr\university\microprocessor\microprocessor-lab\lab4-b\stm32f4xx_hal_rcc_ex.o"
+--strict --scatter "\\VBOXSVR\University\microprocessor\microprocessor-lab\Lab4-B\main.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\main.map" -o \\VBOXSVR\University\microprocessor\microprocessor-lab\Lab4-B\main.axf
